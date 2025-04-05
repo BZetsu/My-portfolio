@@ -345,7 +345,7 @@ export default function Home() {
                     <img 
                       src="/NEXBOT - robot character concept - Copy@1-1536x695.png" 
                       alt="NEXBOT Robot" 
-                      className="object-contain max-w-[120%] max-h-[120%] opacity-80"
+                      className="object-contain max-w-[120%] max-h-[120%] opacity-100"
                       style={{ 
                         position: 'absolute', 
                         zIndex: 1,
