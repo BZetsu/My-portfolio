@@ -892,7 +892,7 @@ export default function ProjectsSection() {
     setDirection(direction);
     setActiveIndex((prev) => {
       // Ensure proper looping
-      const newIndex = (prev - direction + projects.length) % projects.length;
+      const newIndex = (prev + direction + projects.length) % projects.length;
       // Update slider value to match
       setSliderValue(newIndex * (100 / (projects.length - 1)));
       return newIndex;
@@ -912,8 +912,8 @@ export default function ProjectsSection() {
     
     // Only update if different from current index
     if (projectIndex !== activeIndex) {
-      // Fix direction to move cards in the opposite direction when sliding down
-      const direction = projectIndex > activeIndex ? -1 : 1;
+      // Fix direction to move cards in the right direction when sliding
+      const direction = projectIndex > activeIndex ? 1 : -1;
       setDirection(direction);
       setActiveIndex(projectIndex);
     }
@@ -957,7 +957,7 @@ export default function ProjectsSection() {
       interval = setInterval(() => {
         // Only auto-rotate if no interaction in last 5 seconds
         if (Date.now() - lastInteractionTime.current > 5000) {
-          rotateCarousel(1);
+          rotateCarousel(1);  // Keep direction as 1 for consistency
         }
       }, 6000);
     }
@@ -1155,8 +1155,9 @@ export default function ProjectsSection() {
                       const prevIndex = activeIndex;
                       setActiveIndex(index);
                       setSliderValue(index * (100 / (projects.length - 1)));
-                      // Fix direction to move cards in the opposite direction
-                      setDirection(index > prevIndex ? -1 : 1);
+                      // Fix direction to match correct rotation
+                      const direction = index > prevIndex ? 1 : -1;
+                      setDirection(direction);
                       lastInteractionTime.current = Date.now();
                     }}
                     whileHover={{ scale: 1.4 }}
@@ -1190,12 +1191,11 @@ export default function ProjectsSection() {
                   const projectIndex = Math.round(percentage / (100 / (projects.length - 1)));
                   const clampedIndex = Math.max(0, Math.min(projects.length - 1, projectIndex));
                   
-                  // Update if different from current
                   if (clampedIndex !== activeIndex) {
-                    // Fix direction to move cards in the opposite direction when sliding down
-                    const direction = clampedIndex > activeIndex ? -1 : 1;
-                    setDirection(direction);
+                    // Fix direction to match correct rotation
+                    const direction = clampedIndex > activeIndex ? 1 : -1;
                     setActiveIndex(clampedIndex);
+                    setDirection(direction);
                   }
                   
                   lastInteractionTime.current = Date.now();
@@ -1251,8 +1251,8 @@ export default function ProjectsSection() {
                   const clampedIndex = Math.max(0, Math.min(projects.length - 1, newActiveIndex));
                   
                   if (clampedIndex !== activeIndex) {
-                    // Fix direction to move cards in the opposite direction when sliding down
-                    const direction = clampedIndex > activeIndex ? -1 : 1;
+                    // Fix direction to match correct rotation
+                    const direction = clampedIndex > activeIndex ? 1 : -1;
                     setActiveIndex(clampedIndex);
                     setDirection(direction);
                   }
