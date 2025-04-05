@@ -180,7 +180,7 @@ export default function Home() {
       {/* Main content layout - completely redesigned */}
       <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen relative">
         {/* Text content - redesigned with new animation style */}
-        <div className="col-span-1 lg:col-span-2 relative z-10 px-6 py-12 md:py-16 flex flex-col justify-center lg:justify-center items-center lg:items-end">
+        <div className="col-span-1 lg:col-span-2 relative z-20 px-6 py-12 md:py-16 flex flex-col justify-center lg:justify-center items-center lg:items-end">
           <div className="lg:w-1/2 lg:pr-20 mt-24 md:mt-20 lg:mt-16">
             <motion.div 
               initial={{ opacity: 0, y: -10 }}
@@ -330,22 +330,28 @@ export default function Home() {
         {/* Left side - 3D Spline component with optimized loading */}
         <div 
           ref={splineContainerRef}
-          className="absolute inset-0 lg:inset-auto lg:left-0 lg:w-1/2 h-[70vh] lg:h-full z-20"
+          className="absolute inset-0 lg:inset-auto lg:left-0 lg:w-1/2 h-[70vh] lg:h-full z-0"
         >
           {/* Invisible overlay for cursor tracking, but allows clicks to pass through */}
-          <div className="absolute inset-0 z-20" style={{ pointerEvents: 'none' }}></div>
+          <div className="absolute inset-0 z-0" style={{ pointerEvents: 'none' }}></div>
           
           <div className="absolute inset-0 w-[150%] lg:w-[140%] h-[110%] left-0 lg:left-[20%] bottom-[-5%] flex items-center justify-center will-change-transform transform-gpu">
             {/* Only load Spline when visible and not in low performance mode on mobile */}
             {is3DVisible && (
               <>
-                {isLowPerformance && window.innerWidth < 768 ? (
-                  // Simple fallback for low-performance mobile
-                  <div className="w-full h-full flex items-center justify-center">
+                {window.innerWidth < 768 ? (
+                  // Always use static image for mobile
+                  <div className="w-full h-full flex items-end justify-center" style={{ zIndex: 1 }}>
                     <img 
-                      src="/robot-fallback.png" 
-                      alt="3D Robot" 
-                      className="object-contain max-w-full max-h-full"
+                      src="/NEXBOT - robot character concept - Copy@1-1536x695.png" 
+                      alt="NEXBOT Robot" 
+                      className="object-contain max-w-[120%] max-h-[120%] opacity-80"
+                      style={{ 
+                        position: 'absolute', 
+                        zIndex: 1,
+                        bottom: '-10%',
+                        transform: 'translateY(15%) scale(1.25)'
+                      }}
                       onError={(e) => {
                         // Fallback if image doesn't exist
                         e.currentTarget.style.display = 'none';
@@ -390,7 +396,7 @@ export default function Home() {
                   ? "top-[34rem] md:top-[35rem] lg:top-[33rem]" // Default for roles with prefix
                   : "top-[33rem] md:top-[34rem] lg:top-[32rem]" // Smaller adjustment for other messages
           } left-[35%] md:left-[40%] lg:left-[50%] transform -translate-x-1/2 lg:translate-x-0`}
-          style={{ pointerEvents: 'auto', transition: 'top 0.3s ease-out' }}
+          style={{ pointerEvents: 'auto', transition: 'top 0.3s ease-out', zIndex: 30 }}
         >
           <button
             onClick={() => {
