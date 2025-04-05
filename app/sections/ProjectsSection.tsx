@@ -130,6 +130,60 @@ const projects = [
     ],
     role: 'Coming Soon',
     duration: 'In Development'
+  },
+  {
+    id: 6,
+    title: 'Nexus Protocol',
+    description: 'COMING SOON - An all-in-one web3 HR tech solution leveraging AI and Blockchain to streamline operations for web3 businesses.',
+    longDescription: 'Nexus Protocol is an all-in-one web3 HR tech solutions protocol, leveraging AI and Blockchain to solve HR insecurities and streamline managerial and financial daily activities of web3 businesses and service providers. The platform aims to transform how decentralized organizations manage their workforce, ensuring compliance, efficiency, and transparency.',
+    imageUrl: '/images/coming-soon.jpg',
+    technologies: ['AI', 'Blockchain', 'HR Tech', 'Web3', 'Financial Management'],
+    link: '#',
+    color: 'bg-indigo-600',
+    features: [
+      'AI-powered HR management',
+      'Secure payroll automation',
+      'Decentralized identity verification',
+      'Performance analytics dashboard'
+    ],
+    role: 'Coming Soon',
+    duration: 'In Development'
+  },
+  {
+    id: 7,
+    title: 'Mrble Labs',
+    description: 'COMING SOON - A team building innovative blockchain products and solutions with cutting-edge technology.',
+    longDescription: 'Mrble Labs is a team building cool blockchain products and solutions. Their innovative approach combines technical expertise with creative design to create market-leading digital experiences. Mrble Labs focuses on developing products that make blockchain technology more accessible and user-friendly for both developers and end-users.',
+    imageUrl: '/images/coming-soon.jpg',
+    technologies: ['Blockchain Development', 'Smart Contracts', 'Web3', 'DeFi'],
+    link: '#',
+    color: 'bg-emerald-600',
+    features: [
+      'Innovative blockchain solutions',
+      'Cross-chain interoperability',
+      'User-centric design',
+      'Advanced security protocols'
+    ],
+    role: 'Coming Soon',
+    duration: 'In Development'
+  },
+  {
+    id: 8,
+    title: 'Mean Finance - Money Streaming Protocol',
+    description: 'COMING SOON - A decentralized finance protocol enabling continuous, real-time money streaming for payments, salaries, and subscriptions.',
+    longDescription: 'Mean Finance is a Money Streaming Protocol that enables continuous, real-time payments on the blockchain. The platform allows for creating programmable payment streams where funds flow seamlessly from sender to recipient every second, ideal for salaries, subscriptions, and recurring payments. By automating financial flows, Mean Finance eliminates payment delays and enhances financial planning for both individuals and organizations.',
+    imageUrl: '/images/coming-soon.jpg',
+    technologies: ['DeFi', 'Money Streaming', 'Smart Contracts', 'Payment Infrastructure'],
+    link: '#',
+    color: 'bg-blue-600',
+    features: [
+      'Real-time money streaming',
+      'Programmable payment flows',
+      'Multi-chain compatibility',
+      'Customizable streaming parameters'
+    ],
+    role: 'Coming Soon',
+    duration: 'In Development'
   }
 ];
 
@@ -285,31 +339,72 @@ const ProjectCard = memo(({
           {/* Extended content for active mobile cards */}
           {(isMobile && isActive) && (
             <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800">
-              <div className={`mb-3 text-xs ${
-                isDark ? 'text-gray-400' : 'text-gray-800'
-              }`}>
-                <span className="font-semibold">Role:</span> {project.role} | <span className="font-semibold">Duration:</span> {project.duration}
-              </div>
-              
-              <div className="mb-3">
-                <h4 className={`text-xs font-semibold mb-1 ${
-                  isDark ? 'text-white' : 'text-gray-800'
-                }`}>
-                  Key Features
-                </h4>
-                <ul className={`list-disc pl-4 text-xs space-y-0.5 ${
-                  isDark ? 'text-gray-300' : 'text-gray-600'
-                }`}>
-                  {project.features.slice(0, 2).map((feature, index) => (
-                    <li key={index}>{feature}</li>
-                  ))}
-                  {project.features.length > 2 && (
-                    <li className={isDark ? 'text-gray-400' : 'text-gray-500'}>
-                      +{project.features.length - 2} more features
-                    </li>
-                  )}
-                </ul>
-              </div>
+              {/* Show Coming Soon animation for non-Nexcrow projects on mobile with other content faded */}
+              {isMobile && project.link === '#' && project.id !== 1 ? (
+                <div className="mt-3 flex flex-col items-center py-3">
+                  <motion.div 
+                    className={`text-4xl mb-2 ${isDark ? 'text-indigo-500' : 'text-indigo-600'}`}
+                    animate={{ 
+                      y: [0, -8, 0],
+                      rotateY: [0, 180, 360],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatType: "loop",
+                      repeatDelay: 0.5,
+                      times: [0, 0.5, 1]
+                    }}
+                    style={{ transformStyle: 'preserve-3d', perspective: '1000px' }}
+                  >
+                    👀
+                  </motion.div>
+                  <motion.p 
+                    className={`text-base font-medium mb-1 ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3, duration: 0.5 }}
+                  >
+                    Coming Soon
+                  </motion.p>
+                  <motion.p 
+                    className={`text-xs text-center px-4 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5, duration: 0.5 }}
+                  >
+                    This project is currently in development and will be available soon.
+                  </motion.p>
+                </div>
+              ) : (
+                <>
+                  <div className={`mb-3 text-xs ${
+                    isDark ? 'text-gray-400' : 'text-gray-800'
+                  }`}>
+                    <span className="font-semibold">Role:</span> {project.role} | <span className="font-semibold">Duration:</span> {project.duration}
+                  </div>
+                  
+                  <div className="mb-3">
+                    <h4 className={`text-xs font-semibold mb-1 ${
+                      isDark ? 'text-white' : 'text-gray-800'
+                    }`}>
+                      Key Features
+                    </h4>
+                    <ul className={`list-disc pl-4 text-xs space-y-0.5 ${
+                      isDark ? 'text-gray-300' : 'text-gray-600'
+                    }`}>
+                      {project.features.slice(0, 2).map((feature, index) => (
+                        <li key={index}>{feature}</li>
+                      ))}
+                      {project.features.length > 2 && (
+                        <li className={isDark ? 'text-gray-400' : 'text-gray-500'}>
+                          +{project.features.length - 2} more features
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                </>
+              )}
             </div>
           )}
           
