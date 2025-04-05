@@ -8,6 +8,7 @@ import NavBar from './components/NavBar';
 import SocialLinks from './components/SocialLinks';
 import { useTheme } from './context/ThemeContext';
 import CursorTrail from './components/CursorTrail';
+import LinkModal from './components/LinkModal';
 
 // Lazy load heavy components
 const ProjectsSection = dynamic(() => import('./sections/ProjectsSection'), {
@@ -132,6 +133,7 @@ export default function Home() {
   const isLowPerformance = usePerformanceMode();
   const splineContainerRef = useRef<HTMLDivElement>(null);
   const is3DVisible = useIntersectionObserver(splineContainerRef, { threshold: 0.1 });
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   // Simplified roles array
   const roles = useMemo(() => [
@@ -248,54 +250,23 @@ export default function Home() {
                 </p>
               </div>
               
-              {/* Call to action buttons */}
-              <motion.div 
-                className="mt-10 flex flex-wrap gap-4"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.5 }}
-              >
-                <a
-                  href="#projects"
-                  className="px-6 py-3 rounded-lg bg-gradient-to-r from-gray-800 to-black dark:from-gray-700 dark:to-gray-900 text-white font-medium transition-all relative overflow-hidden group hover:shadow-lg"
-                >
-                  <span className="relative z-10">View Projects</span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-black to-gray-800 dark:from-gray-900 dark:to-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                </a>
-                
-                <a
-                  href="#contact"
-                  className="px-6 py-3 rounded-lg bg-transparent border border-gray-700 dark:border-gray-400 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-900/20 transition-all flex items-center hover:shadow-lg"
-                >
-                  Get in Touch
-                  <svg 
-                    className="ml-2 w-4 h-4" 
-                    fill="currentColor" 
-                    viewBox="0 0 24 24" 
-                    aria-hidden="true"
-                  >
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
-                </a>
-              </motion.div>
-              
-              {/* Tech logos - fixed positioning and better visibility */}
+              {/* Tech logos - moved above buttons and made smaller */}
               <motion.div
-                className="mt-14 flex items-center flex-wrap gap-5"
+                className="mt-6 flex items-center flex-wrap gap-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6, duration: 0.5 }}
               >
-                <span className="text-sm text-gray-500 dark:text-gray-400 mr-1 block w-full md:w-auto mb-2 md:mb-0 opacity-80">
+                <span className="text-xs text-gray-500 dark:text-gray-400 mr-1 block w-full md:w-auto mb-2 md:mb-0 opacity-80">
                   Tech I work with:
                 </span>
                 
-                <div className="flex flex-wrap gap-6 items-center">
+                <div className="flex flex-wrap gap-4 items-center">
                   {/* Logo 1: Cursor */}
                   <motion.div
-                    whileHover={{ scale: 1.1, y: -3 }}
+                    whileHover={{ scale: 1.1 }}
                     transition={{ type: "spring", stiffness: 300 }}
-                    className="w-7 h-7 text-gray-700 dark:text-gray-300"
+                    className="w-5 h-5 text-gray-700 dark:text-gray-300"
                   >
                     <img 
                       src="/cursor.svg" 
@@ -306,9 +277,9 @@ export default function Home() {
                   
                   {/* Logo 2: Figma */}
                   <motion.div
-                    whileHover={{ scale: 1.1, y: -3 }}
+                    whileHover={{ scale: 1.1 }}
                     transition={{ type: "spring", stiffness: 300 }}
-                    className="w-6 h-6"
+                    className="w-5 h-5"
                   >
                     <svg viewBox="0 0 38 57" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M19 28.5C19 25.9804 20.0009 23.5641 21.7825 21.7825C23.5641 20.0009 25.9804 19 28.5 19C31.0196 19 33.4359 20.0009 35.2175 21.7825C36.9991 23.5641 38 25.9804 38 28.5C38 31.0196 36.9991 33.4359 35.2175 35.2175C33.4359 36.9991 31.0196 38 28.5 38C25.9804 38 23.5641 36.9991 21.7825 35.2175C20.0009 33.4359 19 31.0196 19 28.5Z" fill={isDark ? "#1ABCFE" : "#1ABCFE"}/>
@@ -321,9 +292,9 @@ export default function Home() {
                   
                   {/* Logo 3: Spline */}
                   <motion.div
-                    whileHover={{ scale: 1.1, y: -3 }}
+                    whileHover={{ scale: 1.1 }}
                     transition={{ type: "spring", stiffness: 300 }}
-                    className="w-7 h-7"
+                    className="w-5 h-5"
                   >
                     <img 
                       src="/idpEx9OuCE_1743870884923.png" 
@@ -334,9 +305,9 @@ export default function Home() {
                   
                   {/* Logo 4: Framer */}
                   <motion.div
-                    whileHover={{ scale: 1.1, y: -3 }}
+                    whileHover={{ scale: 1.1 }}
                     transition={{ type: "spring", stiffness: 300 }}
-                    className="w-6 h-6"
+                    className="w-5 h-5"
                   >
                     <img 
                       src="/framer-svgrepo-com.svg" 
@@ -347,6 +318,11 @@ export default function Home() {
                   </motion.div>
                 </div>
               </motion.div>
+              
+              {/* Call to action buttons - section removed from here */}
+              <div className="mt-10 h-16">
+                {/* Moderate space for separation between icons and buttons */}
+              </div>
             </motion.div>
           </div>
         </div>
@@ -354,8 +330,11 @@ export default function Home() {
         {/* Left side - 3D Spline component with optimized loading */}
         <div 
           ref={splineContainerRef}
-          className="absolute inset-0 lg:inset-auto lg:left-0 lg:w-1/2 h-[70vh] lg:h-full z-10 pointer-events-auto"
+          className="absolute inset-0 lg:inset-auto lg:left-0 lg:w-1/2 h-[70vh] lg:h-full z-20"
         >
+          {/* Invisible overlay for cursor tracking, but allows clicks to pass through */}
+          <div className="absolute inset-0 z-20" style={{ pointerEvents: 'none' }}></div>
+          
           <div className="absolute inset-0 w-[150%] lg:w-[140%] h-[110%] left-0 lg:left-[20%] bottom-[-5%] flex items-center justify-center will-change-transform transform-gpu">
             {/* Only load Spline when visible and not in low performance mode on mobile */}
             {is3DVisible && (
@@ -398,11 +377,70 @@ export default function Home() {
             )}
           </div>
         </div>
+        
+        {/* Buttons positioned absolutely outside the normal content flow to ensure they're on top */}
+        <div 
+          className={`absolute z-50 flex flex-wrap gap-4 pointer-events-auto ${
+            // Reduce movement amount, make it more subtle and correlate with text
+            roles[currentRoleIndex].text === "Fullstack Developer" 
+              ? "top-[36rem] md:top-[38rem] lg:top-[36rem]" // Increased for Fullstack to prevent overlap
+              : roles[currentRoleIndex].text.includes("Zetsu")
+                ? "top-[35rem] md:top-[37rem] lg:top-[35rem]" // Less dramatic position for "Zetsu" message
+                : roles[currentRoleIndex].showPrefix
+                  ? "top-[34rem] md:top-[35rem] lg:top-[33rem]" // Default for roles with prefix
+                  : "top-[33rem] md:top-[34rem] lg:top-[32rem]" // Smaller adjustment for other messages
+          } left-[35%] md:left-[40%] lg:left-[50%] transform -translate-x-1/2 lg:translate-x-0`}
+          style={{ pointerEvents: 'auto', transition: 'top 0.3s ease-out' }}
+        >
+          <button
+            onClick={() => {
+              const projectsSection = document.getElementById('projects');
+              if (projectsSection) {
+                window.scrollTo({
+                  top: projectsSection.offsetTop - 100,
+                  behavior: 'smooth'
+                });
+              }
+            }}
+            className="px-6 py-3 rounded-lg bg-gradient-to-r from-gray-800 to-black dark:from-gray-700 dark:to-gray-900 text-white font-medium transition-all relative overflow-hidden group hover:shadow-lg cursor-pointer"
+            style={{ pointerEvents: 'auto' }}
+          >
+            <span className="relative z-10">View Projects</span>
+            <span className="absolute inset-0 bg-gradient-to-r from-black to-gray-800 dark:from-gray-900 dark:to-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+          </button>
+          
+          <motion.button
+            onClick={() => {
+              setIsModalOpen(true);
+            }}
+            className="px-6 py-3 rounded-lg bg-white border border-gray-800 text-black dark:text-black font-medium hover:bg-gray-50 transition-all flex items-center hover:shadow-lg cursor-pointer"
+            style={{ pointerEvents: 'auto' }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            Get in Touch
+            <svg 
+              className="ml-2 w-4 h-4" 
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              />
+            </svg>
+          </motion.button>
+        </div>
       </div>
       
       {/* Projects Section with optimized loading */}
       <div 
-        className="relative z-10 -mt-10 mb-10"
+        id="projects"
+        className="relative z-30 -mt-10 mb-10"
       >
         <motion.div 
           className={`mx-4 md:mx-8 lg:mx-12 rounded-3xl ${
@@ -453,6 +491,14 @@ export default function Home() {
         <SocialLinks />
         <p className="mt-4">© {new Date().getFullYear()} James Zetsu. All Rights Reserved.</p>
       </footer>
+      
+      {/* LinkModal component */}
+      {isModalOpen && (
+        <LinkModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

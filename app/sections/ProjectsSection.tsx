@@ -1209,7 +1209,7 @@ export default function ProjectsSection() {
           )}
           
           {/* Mobile Explanatory Card - Only shown when a project is selected/hovered */}
-          {isMobile && (
+          {false && isMobile && (
             <AnimatePresence mode="wait">
               {hoveredIndex !== null && (
                 <motion.div 
