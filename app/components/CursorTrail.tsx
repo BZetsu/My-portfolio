@@ -36,10 +36,10 @@ const CursorTrail = () => {
       mainCursorRef.current.style.position = 'absolute';
       
       // Apply theme-based colors
-      const cursorColor = theme === 'dark' ? 'rgba(129, 140, 248, 0.7)' : 'rgba(99, 102, 241, 0.7)';
+      const cursorColor = theme === 'dark' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.7)';
       const shadowColor = theme === 'dark' 
-        ? "0 0 10px 2px rgba(129, 140, 248, 0.6)" 
-        : "0 0 10px 2px rgba(99, 102, 241, 0.6)";
+        ? "0 0 10px 2px rgba(0, 0, 0, 0.6)" 
+        : "0 0 10px 2px rgba(0, 0, 0, 0.6)";
       
       mainCursorRef.current.style.backgroundColor = cursorColor;
       mainCursorRef.current.style.boxShadow = shadowColor;
@@ -114,8 +114,8 @@ const CursorTrail = () => {
             const shadowBlur = index;
             const shadowIntensity = 0.6 - index * 0.05;
             const shadowColor = theme === 'dark' 
-              ? `rgba(129, 140, 248, ${shadowIntensity})` 
-              : `rgba(99, 102, 241, ${shadowIntensity})`;
+              ? `rgba(0, 0, 0, ${shadowIntensity})` 
+              : `rgba(0, 0, 0, ${shadowIntensity})`;
               
             element.style.boxShadow = `0 0 ${shadowSize}px ${shadowBlur}px ${shadowColor}`;
             element.style.filter = `blur(${index * 0.3}px)`;
@@ -142,8 +142,8 @@ const CursorTrail = () => {
   }, [mousePosition, theme]);
   
   // Theme-based colors
-  const dotColor = theme === 'dark' ? 'bg-indigo-400/20' : 'bg-indigo-500/20';
-  const cursorColor = theme === 'dark' ? 'bg-indigo-400/70' : 'bg-indigo-600/70';
+  const dotColor = theme === 'dark' ? 'bg-black/20' : 'bg-black/20';
+  const cursorColor = theme === 'dark' ? 'bg-black/70' : 'bg-black/70';
   
   return (
     <div className="pointer-events-none fixed inset-0 z-50" ref={dotsContainerRef}>
@@ -175,15 +175,17 @@ const CursorTrail = () => {
           height: '20px',
           borderRadius: '50%',
           animation: 'pulse 1.5s infinite alternate ease-in-out',
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.6)'
         }}
       />
       
       {/* Add a CSS animation for the pulse effect */}
       <style jsx>{`
         @keyframes pulse {
-          0% { transform: translate3d(${mousePosition.x}px, ${mousePosition.y}px, 0) translate(-50%, -50%) scale(1); opacity: 0.7; }
-          50% { transform: translate3d(${mousePosition.x}px, ${mousePosition.y}px, 0) translate(-50%, -50%) scale(1.2); opacity: 0.9; }
-          100% { transform: translate3d(${mousePosition.x}px, ${mousePosition.y}px, 0) translate(-50%, -50%) scale(1); opacity: 0.7; }
+          0% { transform: translate3d(${mousePosition.x}px, ${mousePosition.y}px, 0) translate(-50%, -50%) scale(1); opacity: 0.7; background-color: rgba(0, 0, 0, 0.7); }
+          50% { transform: translate3d(${mousePosition.x}px, ${mousePosition.y}px, 0) translate(-50%, -50%) scale(1.2); opacity: 0.9; background-color: rgba(0, 0, 0, 0.8); }
+          100% { transform: translate3d(${mousePosition.x}px, ${mousePosition.y}px, 0) translate(-50%, -50%) scale(1); opacity: 0.7; background-color: rgba(0, 0, 0, 0.7); }
         }
       `}</style>
     </div>

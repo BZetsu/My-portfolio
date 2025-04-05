@@ -20,15 +20,26 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={(e) => toggleTheme(e)}
-      className="relative w-12 h-12 rounded-full flex items-center justify-center overflow-hidden focus:outline-none"
+      className="relative w-12 h-12 rounded-full flex items-center justify-center overflow-hidden focus:outline-none group"
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
       style={{
         background: isDark 
-          ? 'linear-gradient(to top right, rgba(79, 70, 229, 0.1), rgba(124, 58, 237, 0.1))'
+          ? 'linear-gradient(to top right, rgba(79, 70, 229, 0.2), rgba(124, 58, 237, 0.2))'
           : 'linear-gradient(to top right, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1))'
       }}
     >
-      <div className="absolute inset-0 rounded-full opacity-10" />
+      {/* Button highlight effect */}
+      <motion.div 
+        className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+        style={{
+          background: isDark 
+            ? 'radial-gradient(circle at center, rgba(129, 140, 248, 0.2) 0%, transparent 70%)' 
+            : 'radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, transparent 70%)'
+        }}
+        initial={false}
+        animate={{ scale: [0.8, 1.1, 1] }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+      />
       
       {/* Container for the liquid animation */}
       <div className="absolute inset-0 overflow-hidden rounded-full">
@@ -79,54 +90,61 @@ export default function ThemeToggle() {
         )}
       </div>
       
-      {/* Icon container */}
-      <div className="relative z-10">
-        {/* Sun icon */}
+      {/* Icon container with enhanced visibility */}
+      <div className="relative z-10 w-6 h-6">
+        {/* Sun icon with improved visibility */}
         <motion.div
           className="absolute inset-0 flex items-center justify-center"
           style={{ opacity: isDark ? 0 : 1 }}
-          animate={{ rotate: isDark ? 180 : 0, opacity: isDark ? 0 : 1 }}
+          animate={{ 
+            rotate: isDark ? 180 : 0, 
+            opacity: isDark ? 0 : 1,
+            scale: isDark ? 0.5 : 1
+          }}
           transition={{ duration: 0.5 }}
         >
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
-            className="h-6 w-6 text-yellow-500" 
-            fill="none" 
+            className="h-6 w-6 text-yellow-500 drop-shadow-md" 
             viewBox="0 0 24 24" 
-            stroke="currentColor"
+            fill="currentColor"
           >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" 
-            />
+            <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
           </svg>
         </motion.div>
         
-        {/* Moon icon */}
+        {/* Moon icon with improved visibility */}
         <motion.div
           className="absolute inset-0 flex items-center justify-center"
           style={{ opacity: isDark ? 1 : 0 }}
-          animate={{ rotate: !isDark ? -180 : 0, opacity: !isDark ? 0 : 1 }}
+          animate={{ 
+            rotate: !isDark ? -180 : 0, 
+            opacity: !isDark ? 0 : 1,
+            scale: !isDark ? 0.5 : 1
+          }}
           transition={{ duration: 0.5 }}
         >
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
-            className="h-6 w-6 text-indigo-200" 
-            fill="none" 
+            className="h-6 w-6 text-indigo-200 drop-shadow-lg" 
             viewBox="0 0 24 24" 
-            stroke="currentColor"
+            fill="currentColor"
           >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" 
-            />
+            <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clipRule="evenodd" />
           </svg>
         </motion.div>
       </div>
+      
+      {/* Button glow effect on hover */}
+      <motion.div 
+        className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100"
+        style={{
+          boxShadow: isDark 
+            ? '0 0 15px rgba(129, 140, 248, 0.5)' 
+            : '0 0 15px rgba(99, 102, 241, 0.3)',
+          transition: 'opacity 0.3s ease'
+        }}
+      />
     </button>
   );
 } 

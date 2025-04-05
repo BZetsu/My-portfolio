@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Space_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./context/ThemeContext";
 
@@ -10,6 +11,12 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const spaceMono = Space_Mono({
+  weight: ['400', '700'],
+  variable: "--font-space-mono",
   subsets: ["latin"],
 });
 
@@ -28,7 +35,7 @@ export default function RootLayout({
     <ThemeProvider>
       <html lang="en" className="scroll-smooth">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased transition-colors duration-300`}
+          className={`${geistSans.variable} ${geistMono.variable} ${spaceMono.variable} antialiased transition-colors duration-300`}
         >
           {children}
         </body>
