@@ -138,28 +138,46 @@ export default function Home() {
   const is3DVisible = useIntersectionObserver(splineContainerRef, { threshold: 0.1 });
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  // Simplified roles array
+  // Updated unified role phrases
   const roles = useMemo(() => [
-    { text: "Designer", showPrefix: true }, 
-    { text: "Fullstack Developer", showPrefix: true }, 
-    { text: "Manager", showPrefix: true }, 
-    { text: "Founder", showPrefix: true },
-    { text: "I am James", showPrefix: false },
-    { text: "You can call me Zetsu", showPrefix: false },
-    { text: "Nice to meet you", showPrefix: false }
+    "I am a Designer",
+    "I am a Fullstack Developer", 
+    "I am a Manager", 
+    "I am a Founder",
+    "But in all, I am a Creator, a builder",
+    "I am James",
+    "You can call me Zetsu",
+    "Nice to meet you"
   ], []);
   
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+  const [isTyping, setIsTyping] = useState(true);
   
-  // Role switching with performance adaptation
+  // Role switching with smoother transitions
   useEffect(() => {
-    // Longer intervals on low-performance devices
-    const interval = setInterval(() => {
-      setCurrentRoleIndex((prevIndex) => (prevIndex + 1) % roles.length);
-    }, isLowPerformance ? 4000 : 3000);
+    const typingInterval = isLowPerformance ? 4000 : 3000;
     
-    return () => clearInterval(interval);
-  }, [roles.length, isLowPerformance]);
+    // Start typing animation
+    setIsTyping(true);
+    
+    // Set timeout for role transition
+    const timer = setTimeout(() => {
+      setCurrentRoleIndex((prevIndex) => (prevIndex + 1) % roles.length);
+    }, typingInterval);
+    
+    return () => clearTimeout(timer);
+  }, [roles.length, isLowPerformance, currentRoleIndex]);
+  
+  // Effect to handle typing animation state
+  useEffect(() => {
+    // After role changes, briefly pause typing animation to create pause effect
+    setIsTyping(false);
+    const timer = setTimeout(() => {
+      setIsTyping(true);
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, [currentRoleIndex]);
 
   // Get isDark directly from theme for styling
   const isDark = theme === 'dark';
@@ -182,89 +200,175 @@ export default function Home() {
       
       {/* Main content layout - completely redesigned */}
       <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen relative">
+        {/* Left side - 3D Spline component - back to original position */}
+        <div 
+          ref={splineContainerRef}
+          className="absolute inset-0 lg:inset-auto lg:left-0 lg:w-1/2 h-[70vh] lg:h-full z-10"
+        >
+          <div 
+            className="absolute inset-0 w-[150%] lg:w-[140%] h-[110%] left-0 lg:left-[20%] bottom-[-5%] flex items-center justify-center transform-gpu will-change-transform"
+          >
+            {/* Only load Spline when visible and not in low performance mode on mobile */}
+            {is3DVisible && (
+              <>
+                {window.innerWidth < 768 ? (
+                  // Always use static image for mobile
+                  <div className="w-full h-full flex items-end justify-center" style={{ zIndex: 1 }}>
+                    <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white dark:to-black opacity-40 z-10"></div>
+                    <img 
+                      src="/NEXBOT - robot character concept - Copy@1-1536x695.png" 
+                      alt="NEXBOT Robot" 
+                      className="object-contain max-w-[120%] max-h-[120%] opacity-100"
+                      style={{ 
+                        position: 'absolute', 
+                        zIndex: 1,
+                        bottom: '-10%',
+                        transform: 'translateY(15%) scale(1.25)'
+                      }}
+                      onError={(e) => {
+                        // Fallback if image doesn't exist
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <Suspense fallback={
+                    <div className="w-full h-full flex items-center justify-center">
+                      <div className="animate-pulse text-black/50 dark:text-white/50">Loading 3D scene...</div>
+                    </div>
+                  }>
+                    <div 
+                      className="transform-gpu will-change-transform hardware-accelerated w-full h-full absolute inset-0"
+                    >
+                      <SplineWrapper 
+                        scene="https://prod.spline.design/1WM5NpYvXC5G168Z/scene.splinecode"
+                        className="w-full h-full scale-[1.2] lg:scale-[1.35] will-change-transform hardware-accelerated"
+                        style={{
+                          transformOrigin: 'center center',
+                          transform: 'translate3d(0, 0, 0)',
+                          backfaceVisibility: 'hidden',
+                          WebkitBackfaceVisibility: 'hidden',
+                          perspective: '1000px'
+                        }}
+                      />
+                    </div>
+                  </Suspense>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+        
         {/* Text content - redesigned with new animation style */}
-        <div className="col-span-1 lg:col-span-2 relative z-20 px-6 py-12 md:py-16 flex flex-col justify-center lg:justify-center items-center lg:items-end">
-          <div className="lg:w-1/2 lg:pr-20 mt-24 md:mt-20 lg:mt-16">
+        <div className="col-span-1 lg:col-span-2 relative z-20 px-6 py-12 md:py-16 flex flex-col justify-center lg:justify-center items-center lg:items-end pointer-events-none">
+          <div className="lg:w-1/2 lg:pr-20 mt-24 md:mt-20 lg:mt-16 relative z-10 pointer-events-none">
             <motion.div 
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
-              className="max-w-lg"
+              className="max-w-lg relative pointer-events-none"
+              style={{ pointerEvents: 'none' }}
             >
-              {/* Heading with role - removed portfolio label */}
-              <div className="mb-8">
-                <motion.h1
-                  className="text-4xl md:text-5xl lg:text-6xl font-bold"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.8 }}
-                >
-                  {roles[currentRoleIndex].showPrefix && (
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-black to-black dark:from-gray-300 dark:to-gray-100">
-                      I am a{" "}
-                    </span>
-                  )}
-                  
+              {/* Semi-transparent backdrop for better text legibility - ensure it's pointer-events-none */}
+              <div className="absolute -inset-4 -z-10 rounded-2xl backdrop-blur-sm bg-white/10 dark:bg-black/20 opacity-0 md:opacity-30 pointer-events-none"></div>
+              
+              {/* Heading with improved animation - ensure all elements are pointer-events-none */}
+              <div className="mb-8 pointer-events-none">
+                <h1 className="hero-text-container text-4xl md:text-5xl lg:text-6xl font-bold relative pointer-events-none">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={currentRoleIndex}
-                      className="inline-block"
-                      initial={{ opacity: 0, filter: "blur(8px)" }}
-                      animate={{ 
-                        opacity: 1, 
-                        filter: "blur(0px)",
-                        transition: { duration: 0.6 }
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                      variants={{
+                        hidden: { 
+                          opacity: 0, 
+                          y: 20,
+                          filter: "blur(8px)" 
+                        },
+                        visible: { 
+                          opacity: 1, 
+                          y: 0,
+                          filter: "blur(0px)",
+                          transition: {
+                            duration: 0.5,
+                            ease: [0.215, 0.61, 0.355, 1]
+                          }
+                        },
+                        exit: { 
+                          opacity: 0,
+                          y: -20,
+                          filter: "blur(8px)",
+                          transition: {
+                            duration: 0.3,
+                            ease: [0.55, 0.085, 0.68, 0.53]
+                          }
+                        }
                       }}
-                      exit={{ 
-                        opacity: 0,
-                        filter: "blur(8px)",
-                        transition: { duration: 0.3 }
-                      }}
+                      className="inline-block pointer-events-none"
                     >
-                      <span className="bg-clip-text text-transparent bg-gradient-to-r from-black to-black dark:from-gray-200 dark:to-white relative inline-block gradient-text focus-in pb-2 overflow-visible">
-                        {roles[currentRoleIndex].text}
-                        <motion.span
-                          className="absolute -right-4 top-0 bottom-0 w-[3px] bg-black dark:bg-white"
-                          animate={{ 
-                            opacity: [1, 0, 1],
-                            transition: { 
-                              repeat: Infinity, 
-                              duration: 0.8
-                            }
+                      <span 
+                        className={`relative inline-block ${
+                          isDark ? 'text-gradient text-gradient-dark text-glow-sm' : 'text-gradient text-gradient-light'
+                        } pointer-events-none`}
+                      >
+                        {roles[currentRoleIndex]}
+                        <span 
+                          className="typing-cursor pointer-events-none"
+                          style={{
+                            backgroundColor: isDark ? '#fff' : '#000',
+                            opacity: isTyping ? 1 : 0
                           }}
                         />
                       </span>
                     </motion.div>
                   </AnimatePresence>
-                </motion.h1>
+                </h1>
               </div>
               
-              {/* Description */}
-              <div className="mt-4">
-                <p style={{ 
-                  fontSize: '1rem', 
-                  lineHeight: '1.5', 
-                  color: theme === 'dark' ? '#DDDDDD' : '#000000',
-                  fontWeight: 500,
-                }}>
-                  Crafting immersive digital experiences through code and design.
-                  <br />
-                  Specializing in interactive 3D web experiences and creative development.
-                </p>
+              {/* Other content (description, tech logos) should all be pointer-events-none to pass through to the 3D */}
+              <div className="mt-4 pointer-events-none">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ 
+                    delay: 0.3,
+                    staggerChildren: 0.1
+                  }}
+                  className="pointer-events-none"
+                >
+                  <motion.p 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className={`text-base leading-relaxed ${isDark ? 'text-gray-200' : 'text-gray-800'} font-medium pointer-events-none`}
+                  >
+                    Crafting immersive digital experiences through code and design.
+                  </motion.p>
+                  <motion.p 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.1 }}
+                    className={`text-base leading-relaxed mt-2 ${isDark ? 'text-gray-300' : 'text-gray-700'} font-medium pointer-events-none`}
+                  >
+                    Specializing in interactive 3D web experiences and creative development.
+                  </motion.p>
+                </motion.div>
               </div>
               
-              {/* Tech logos - moved above buttons and made smaller */}
+              {/* Tech logos should also be pointer-events-none */}
               <motion.div
-                className="mt-6 flex items-center flex-wrap gap-4"
+                className="mt-6 flex items-center flex-wrap gap-4 pointer-events-none"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6, duration: 0.5 }}
               >
-                <span className="text-xs text-gray-500 dark:text-gray-400 mr-1 block w-full md:w-auto mb-2 md:mb-0 opacity-80">
+                <span className="text-xs text-gray-500 dark:text-gray-400 mr-1 block w-full md:w-auto mb-2 md:mb-0 opacity-80 pointer-events-none">
                   Tech I work with:
                 </span>
                 
-                <div className="flex flex-wrap gap-4 items-center">
+                <div className="flex flex-wrap gap-4 items-center pointer-events-none">
                   {/* Logo 1: Cursor */}
                   <motion.div
                     whileHover={{ scale: 1.1 }}
@@ -323,67 +427,10 @@ export default function Home() {
               </motion.div>
               
               {/* Call to action buttons - section removed from here */}
-              <div className="mt-10 h-16">
+              <div className="mt-10 h-16 pointer-events-none">
                 {/* Moderate space for separation between icons and buttons */}
               </div>
             </motion.div>
-          </div>
-        </div>
-        
-        {/* Left side - 3D Spline component with optimized loading */}
-        <div 
-          ref={splineContainerRef}
-          className="absolute inset-0 lg:inset-auto lg:left-0 lg:w-1/2 h-[70vh] lg:h-full z-0"
-        >
-          {/* Invisible overlay for cursor tracking, but allows clicks to pass through */}
-          <div className="absolute inset-0 z-0" style={{ pointerEvents: 'none' }}></div>
-          
-          <div className="absolute inset-0 w-[150%] lg:w-[140%] h-[110%] left-0 lg:left-[20%] bottom-[-5%] flex items-center justify-center will-change-transform transform-gpu">
-            {/* Only load Spline when visible and not in low performance mode on mobile */}
-            {is3DVisible && (
-              <>
-                {window.innerWidth < 768 ? (
-                  // Always use static image for mobile
-                  <div className="w-full h-full flex items-end justify-center" style={{ zIndex: 1 }}>
-                    <img 
-                      src="/NEXBOT - robot character concept - Copy@1-1536x695.png" 
-                      alt="NEXBOT Robot" 
-                      className="object-contain max-w-[120%] max-h-[120%] opacity-100"
-                      style={{ 
-                        position: 'absolute', 
-                        zIndex: 1,
-                        bottom: '-10%',
-                        transform: 'translateY(15%) scale(1.25)'
-                      }}
-                      onError={(e) => {
-                        // Fallback if image doesn't exist
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <Suspense fallback={
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="animate-pulse text-black/50 dark:text-white/50">Loading 3D scene...</div>
-                    </div>
-                  }>
-                    <div className="transform-gpu will-change-transform hardware-accelerated w-full h-full">
-                      <SplineWrapper 
-                        scene="https://prod.spline.design/1WM5NpYvXC5G168Z/scene.splinecode"
-                        className="w-full h-full scale-[1.2] lg:scale-[1.35] will-change-transform hardware-accelerated"
-                        style={{
-                          transformOrigin: 'center center',
-                          transform: 'translate3d(0, 0, 0)',
-                          backfaceVisibility: 'hidden',
-                          WebkitBackfaceVisibility: 'hidden',
-                          perspective: '1000px',
-                        }}
-                      />
-                    </div>
-                  </Suspense>
-                )}
-              </>
-            )}
           </div>
         </div>
         
@@ -391,17 +438,17 @@ export default function Home() {
         <div 
           className={`absolute z-50 flex flex-wrap gap-4 pointer-events-auto ${
             // Reduce movement amount, make it more subtle and correlate with text
-            roles[currentRoleIndex].text === "Fullstack Developer" 
+            roles[currentRoleIndex].includes("Fullstack Developer") 
               ? "top-[36rem] md:top-[38rem] lg:top-[36rem]" // Increased for Fullstack to prevent overlap
-              : roles[currentRoleIndex].text.includes("Zetsu")
+              : roles[currentRoleIndex].includes("Zetsu")
                 ? "top-[35rem] md:top-[37rem] lg:top-[35rem]" // Less dramatic position for "Zetsu" message
-                : roles[currentRoleIndex].showPrefix
+                : roles[currentRoleIndex].startsWith("I am a")
                   ? "top-[34rem] md:top-[35rem] lg:top-[33rem]" // Default for roles with prefix
                   : "top-[33rem] md:top-[34rem] lg:top-[32rem]" // Smaller adjustment for other messages
-          } left-[35%] md:left-[40%] lg:left-[50%] transform -translate-x-1/2 lg:translate-x-0`}
-          style={{ pointerEvents: 'auto', transition: 'top 0.3s ease-out', zIndex: 30 }}
+          } left-[32%] md:left-[35%] lg:left-[44%] transform -translate-x-1/2 lg:translate-x-0`}
+          style={{ pointerEvents: 'auto', transition: 'top 0.3s ease-out', zIndex: 100 }}
         >
-          <button
+          <motion.button
             onClick={() => {
               const projectsSection = document.getElementById('projects');
               if (projectsSection) {
@@ -411,21 +458,27 @@ export default function Home() {
                 });
               }
             }}
-            className="px-6 py-3 rounded-lg bg-gradient-to-r from-gray-800 to-black dark:from-gray-700 dark:to-gray-900 text-white font-medium transition-all relative overflow-hidden group hover:shadow-lg cursor-pointer"
-            style={{ pointerEvents: 'auto' }}
+            className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg bg-gradient-to-r from-gray-800 to-black dark:from-gray-700 dark:to-gray-900 text-white font-medium relative overflow-hidden group hover:shadow-lg cursor-pointer"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             <span className="relative z-10">View Projects</span>
             <span className="absolute inset-0 bg-gradient-to-r from-black to-gray-800 dark:from-gray-900 dark:to-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-          </button>
+          </motion.button>
           
           <motion.button
             onClick={() => {
               setIsModalOpen(true);
             }}
-            className="px-6 py-3 rounded-lg bg-white border border-gray-800 text-black dark:text-black font-medium hover:bg-gray-50 transition-all flex items-center hover:shadow-lg cursor-pointer"
-            style={{ pointerEvents: 'auto' }}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
+            className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg bg-white border border-gray-800 text-black dark:text-black font-medium hover:bg-gray-50 transition-all flex items-center hover:shadow-lg cursor-pointer"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.9 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             Get in Touch
             <svg 
