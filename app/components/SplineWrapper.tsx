@@ -11,7 +11,7 @@ type SplineProps = {
 };
 
 // Define a placeholder component for when Spline can't be loaded
-const SplinePlaceholder = ({ scene, className, style }: SplineProps) => (
+const SplinePlaceholder = ({ className, style }: Omit<SplineProps, 'scene'>) => (
   <div className={`w-full h-full flex items-center justify-center ${className || ''}`} style={style}>
     <div className="text-black/50 dark:text-white/50">3D scene unavailable</div>
   </div>
