@@ -6,7 +6,20 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FiArrowLeft } from 'react-icons/fi';
 import { SiBlender, SiUnrealengine, SiAdobephotoshop, SiAdobeaftereffects, SiAdobepremierepro } from 'react-icons/si';
-import Spline from '@splinetool/react-spline/next';
+import dynamic from 'next/dynamic';
+
+// Use dynamic import for SplineWrapper with fallback
+const SplineWrapper = dynamic(
+  () => import('../../components/SplineWrapper').catch(() => import('../../components/SplineFallback')),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="animate-pulse text-white/50">Loading 3D scene...</div>
+      </div>
+    )
+  }
+);
 
 // Custom component for animated images with parallax and 3D effects
 const ParallaxImage = ({ src, alt, className = "", index = 0, floating = false, rotating = false }: { src: string; alt: string; className?: string; index?: number; floating?: boolean; rotating?: boolean }) => {

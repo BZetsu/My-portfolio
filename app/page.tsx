@@ -89,15 +89,18 @@ const usePerformanceMode = () => {
 // Memoized cursor trail component to prevent unnecessary rerenders
 const MemoizedCursorTrail = React.memo(CursorTrail);
 
-// Optimized 3D scene loading with performance adaptations
-const Spline = dynamic(() => import('@splinetool/react-spline/next'), { 
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-full flex items-center justify-center">
-      <div className="animate-pulse text-black/50 dark:text-white/50">Loading 3D scene...</div>
-    </div>
-  )
-});
+// Lazily load components that might cause issues
+const SplineWrapper = dynamic(
+  () => import('./components/SplineWrapper').catch(() => import('./components/SplineFallback')),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="animate-pulse text-black/50 dark:text-white/50">Loading 3D scene...</div>
+      </div>
+    )
+  }
+);
 
 // Custom hook for intersection observer
 function useIntersectionObserver(
@@ -365,7 +368,7 @@ export default function Home() {
                     </div>
                   }>
                     <div className="transform-gpu will-change-transform hardware-accelerated w-full h-full">
-                      <Spline 
+                      <SplineWrapper 
                         scene="https://prod.spline.design/1WM5NpYvXC5G168Z/scene.splinecode"
                         className="w-full h-full scale-[1.2] lg:scale-[1.35] will-change-transform hardware-accelerated"
                         style={{
