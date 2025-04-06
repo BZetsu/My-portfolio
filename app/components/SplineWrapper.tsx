@@ -23,12 +23,13 @@ const DynamicSpline = dynamic(
   async () => {
     // Explicitly handle loading both packages
     try {
-      // First, ensure the runtime is loaded
-      await import('@splinetool/runtime');
+      // First, ensure the runtime is loaded - using ES module dynamic import
+      const runtime = await import('@splinetool/runtime');
       
-      // Then try to load the React component
+      // Then try to load the React component - using named export pattern
       const SplineModule = await import('@splinetool/react-spline');
-      return SplineModule.default;
+      // Ensure we're using the default export correctly for ESM
+      return SplineModule.default || SplineModule;
     } catch (error) {
       console.error("Error loading Spline or its dependencies:", error);
       return SplinePlaceholder;
@@ -62,6 +63,17 @@ export default function SplineWrapper({ scene, className, style }: SplineProps) 
     };
   }, []);
 
+  // Ensure cursor events work by applying these styles to the wrapper
+  const enhancedStyle = {
+    ...style,
+    pointerEvents: 'auto' as const,
+    position: style?.position || 'relative' as const,
+    zIndex: style?.zIndex || 5,
+  };
+
+  // Ensure cursor events work by enhancing the className
+  const enhancedClassName = `${className || ''} pointer-events-auto`;
+
   if (loadError) {
     return (
       <div className={`w-full h-full flex items-center justify-center ${className || ''}`} style={style}>
@@ -86,7 +98,7 @@ export default function SplineWrapper({ scene, className, style }: SplineProps) 
         </div>
       }
     >
-      <DynamicSpline scene={scene} className={className} style={style} />
+      <DynamicSpline scene={scene} className={enhancedClassName} style={enhancedStyle} />
     </Suspense>
   );
 } 

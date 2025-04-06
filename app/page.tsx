@@ -91,7 +91,7 @@ const MemoizedCursorTrail = React.memo(CursorTrail);
 
 // Lazily load components that might cause issues
 const SplineWrapper = dynamic(
-  () => import('./components/SplineWrapper').catch(() => import('./components/SplineFallback')),
+  () => import('./components/SplineWrapper').then(mod => mod.default).catch(() => import('./components/SplineFallback').then(mod => mod.default)),
   { 
     ssr: false,
     loading: () => (
