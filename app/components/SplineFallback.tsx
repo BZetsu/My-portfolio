@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
-type SplineFallbackProps = {
+// Match the props type from SplineWrapper
+type SplineProps = {
   scene: string;
   className?: string;
   style?: React.CSSProperties;
@@ -11,10 +12,11 @@ type SplineFallbackProps = {
 };
 
 export default function SplineFallback({ 
+  scene,
   className, 
   style, 
   fallbackImage = '/NEXBOT - robot character concept - Copy@1-1536x695.png' 
-}: SplineFallbackProps) {
+}: SplineProps) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -23,18 +25,18 @@ export default function SplineFallback({
 
   if (!isMounted) {
     return (
-      <div className={`w-full h-full flex items-center justify-center ${className}`} style={style}>
+      <div className={`w-full h-full flex items-center justify-center ${className || ''}`} style={style}>
         <div className="animate-pulse text-black/50 dark:text-white/50">Loading image...</div>
       </div>
     );
   }
 
   return (
-    <div className={`w-full h-full flex items-center justify-center ${className}`} style={style}>
+    <div className={`w-full h-full flex items-center justify-center ${className || ''}`} style={style}>
       <div className="relative w-full h-full">
         <Image
           src={fallbackImage}
-          alt="3D Scene Fallback"
+          alt={`3D Scene Fallback for ${scene}`}
           fill
           style={{ objectFit: 'contain' }}
           priority

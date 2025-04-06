@@ -3,21 +3,35 @@
 import { Suspense, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 
-// Dynamically import Spline with fallback handling
-// Use a function to explicitly resolve the import path to avoid webpack confusion
-const SplineComponent = dynamic(
-  () => {
-    // Explicitly use a try-catch to handle potential import path issues
+// Define prop types that match what Spline component will expect
+type SplineProps = {
+  scene: string;
+  className?: string;
+  style?: React.CSSProperties;
+};
+
+// Define a placeholder component for when Spline can't be loaded
+const SplinePlaceholder = ({ scene, className, style }: SplineProps) => (
+  <div className={`w-full h-full flex items-center justify-center ${className || ''}`} style={style}>
+    <div className="text-black/50 dark:text-white/50">3D scene unavailable</div>
+  </div>
+);
+
+// Create a component that manually loads both dependencies
+// This avoids relying on webpack to resolve the dependencies
+const DynamicSpline = dynamic(
+  async () => {
+    // Explicitly handle loading both packages
     try {
-      return import('@splinetool/react-spline').then(mod => mod.default); 
+      // First, ensure the runtime is loaded
+      await import('@splinetool/runtime');
+      
+      // Then try to load the React component
+      const SplineModule = await import('@splinetool/react-spline');
+      return SplineModule.default;
     } catch (error) {
-      console.error("Error loading Spline:", error);
-      // Return a fallback component if the import fails
-      return Promise.resolve(() => (
-        <div className="w-full h-full flex items-center justify-center">
-          <div className="text-black/50 dark:text-white/50">Failed to load 3D scene</div>
-        </div>
-      ));
+      console.error("Error loading Spline or its dependencies:", error);
+      return SplinePlaceholder;
     }
   },
   { 
@@ -30,13 +44,7 @@ const SplineComponent = dynamic(
   }
 );
 
-type SplineWrapperProps = {
-  scene: string;
-  className?: string;
-  style?: React.CSSProperties;
-};
-
-export default function SplineWrapper({ scene, className, style }: SplineWrapperProps) {
+export default function SplineWrapper({ scene, className, style }: SplineProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [loadError, setLoadError] = useState(false);
 
@@ -56,7 +64,7 @@ export default function SplineWrapper({ scene, className, style }: SplineWrapper
 
   if (loadError) {
     return (
-      <div className={`w-full h-full flex items-center justify-center ${className}`} style={style}>
+      <div className={`w-full h-full flex items-center justify-center ${className || ''}`} style={style}>
         <div className="text-black/50 dark:text-white/50">Failed to load 3D scene</div>
       </div>
     );
@@ -64,7 +72,7 @@ export default function SplineWrapper({ scene, className, style }: SplineWrapper
 
   if (!isMounted) {
     return (
-      <div className={`w-full h-full flex items-center justify-center ${className}`} style={style}>
+      <div className={`w-full h-full flex items-center justify-center ${className || ''}`} style={style}>
         <div className="animate-pulse text-black/50 dark:text-white/50">Loading 3D scene...</div>
       </div>
     );
@@ -73,12 +81,12 @@ export default function SplineWrapper({ scene, className, style }: SplineWrapper
   return (
     <Suspense 
       fallback={
-        <div className={`w-full h-full flex items-center justify-center ${className}`} style={style}>
+        <div className={`w-full h-full flex items-center justify-center ${className || ''}`} style={style}>
           <div className="animate-pulse text-black/50 dark:text-white/50">Loading 3D scene...</div>
         </div>
       }
     >
-      <SplineComponent scene={scene} className={className} style={style} />
+      <DynamicSpline scene={scene} className={className} style={style} />
     </Suspense>
   );
 } 
