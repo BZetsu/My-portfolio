@@ -426,80 +426,65 @@ export default function Home() {
                 </div>
               </motion.div>
               
-              {/* Call to action buttons - section removed from here */}
-              <div className="mt-10 h-16 pointer-events-none">
-                {/* Moderate space for separation between icons and buttons */}
-              </div>
+              {/* CTA Buttons - improved for iOS compatibility */}
+              <motion.div 
+                className="mt-12 flex flex-wrap gap-4 relative z-30"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.7, duration: 0.5 }}
+                style={{ pointerEvents: 'auto' }}
+              >
+                <motion.button
+                  onClick={() => {
+                    const projectsSection = document.getElementById('projects');
+                    if (projectsSection) {
+                      window.scrollTo({
+                        top: projectsSection.offsetTop - 100,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }}
+                  className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg bg-gradient-to-r from-gray-800 to-black dark:from-gray-700 dark:to-gray-900 text-white font-medium relative overflow-hidden group hover:shadow-lg"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{ cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
+                >
+                  <span className="relative z-10">View Projects</span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-black to-gray-800 dark:from-gray-900 dark:to-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                </motion.button>
+                
+                <motion.button
+                  onClick={() => {
+                    setIsModalOpen(true);
+                  }}
+                  className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg bg-white border border-gray-800 text-black dark:text-black font-medium hover:bg-gray-50 transition-all flex items-center hover:shadow-lg"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{ cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
+                >
+                  Get in Touch
+                  <svg 
+                    className="ml-2 w-4 h-4" 
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  </svg>
+                </motion.button>
+              </motion.div>
             </motion.div>
           </div>
         </div>
-        
-        {/* Buttons positioned absolutely outside the normal content flow to ensure they're on top */}
-        <div 
-          className={`absolute z-50 flex flex-wrap gap-4 pointer-events-auto ${
-            // Reduce movement amount, make it more subtle and correlate with text
-            roles[currentRoleIndex].includes("Fullstack Developer") 
-              ? "top-[36rem] md:top-[38rem] lg:top-[36rem]" // Increased for Fullstack to prevent overlap
-              : roles[currentRoleIndex].includes("Zetsu")
-                ? "top-[35rem] md:top-[37rem] lg:top-[35rem]" // Less dramatic position for "Zetsu" message
-                : roles[currentRoleIndex].startsWith("I am a")
-                  ? "top-[34rem] md:top-[35rem] lg:top-[33rem]" // Default for roles with prefix
-                  : "top-[33rem] md:top-[34rem] lg:top-[32rem]" // Smaller adjustment for other messages
-          } left-[32%] md:left-[35%] lg:left-[44%] transform -translate-x-1/2 lg:translate-x-0`}
-          style={{ pointerEvents: 'auto', transition: 'top 0.3s ease-out', zIndex: 100 }}
-        >
-          <motion.button
-            onClick={() => {
-              const projectsSection = document.getElementById('projects');
-              if (projectsSection) {
-                window.scrollTo({
-                  top: projectsSection.offsetTop - 100,
-                  behavior: 'smooth'
-                });
-              }
-            }}
-            className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg bg-gradient-to-r from-gray-800 to-black dark:from-gray-700 dark:to-gray-900 text-white font-medium relative overflow-hidden group hover:shadow-lg cursor-pointer"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <span className="relative z-10">View Projects</span>
-            <span className="absolute inset-0 bg-gradient-to-r from-black to-gray-800 dark:from-gray-900 dark:to-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-          </motion.button>
-          
-          <motion.button
-            onClick={() => {
-              setIsModalOpen(true);
-            }}
-            className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg bg-white border border-gray-800 text-black dark:text-black font-medium hover:bg-gray-50 transition-all flex items-center hover:shadow-lg cursor-pointer"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.9 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Get in Touch
-            <svg 
-              className="ml-2 w-4 h-4" 
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M13 10V3L4 14h7v7l9-11h-7z"
-              />
-            </svg>
-          </motion.button>
-        </div>
       </div>
       
-      {/* Projects Section with optimized loading */}
+      {/* Projects Section with optimized loading - improved shadows for iOS */}
       <div 
         id="projects"
         className="relative z-30 -mt-10 mb-10"
@@ -507,16 +492,22 @@ export default function Home() {
         <motion.div 
           className={`mx-4 md:mx-8 lg:mx-12 rounded-3xl ${
             isDark 
-              ? 'bg-black backdrop-blur-sm border border-white/10 shadow-[0_20px_50px_rgba(255,_255,_255,_0.15)]' 
-              : 'bg-white shadow-[0_20px_50px_rgba(8,_112,_184,_0.2)]'
+              ? 'bg-black backdrop-blur-sm border border-white/10' 
+              : 'bg-white border border-gray-100'
           } overflow-hidden relative group`}
+          style={{
+            boxShadow: isDark 
+              ? '0 20px 50px rgba(255, 255, 255, 0.15)' 
+              : '0 20px 50px rgba(8, 112, 184, 0.2)',
+            WebkitBoxShadow: isDark 
+              ? '0 20px 50px rgba(255, 255, 255, 0.15)' 
+              : '0 20px 50px rgba(8, 112, 184, 0.2)'
+          }}
           whileHover={{ 
-            y: -5, // Reduced movement for better performance
-            boxShadow: theme === 'dark' 
-              ? "0 30px 60px rgba(255, 255, 255, 0.2)" 
-              : "0 30px 60px rgba(8, 112, 184, 0.3)",
+            y: -5,
             transition: { duration: 0.3 }
           }}
+          viewport={{ once: true }}
         >
           {/* Ghost shiny message - conditionally rendered */}
           {!isLowPerformance && (
