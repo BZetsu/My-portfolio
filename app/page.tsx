@@ -444,13 +444,17 @@ export default function Home() {
                       });
                     }
                   }}
-                  className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg bg-gradient-to-r from-gray-800 to-black dark:from-gray-700 dark:to-gray-900 text-white font-medium relative overflow-hidden group hover:shadow-lg"
+                  className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg bg-gray-900 dark:bg-gray-800 text-white font-medium relative overflow-hidden hover:shadow-lg"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  style={{ cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
+                  style={{ 
+                    cursor: 'pointer', 
+                    WebkitTapHighlightColor: 'transparent',
+                    WebkitAppearance: 'none',
+                    display: 'inline-block'
+                  }}
                 >
                   <span className="relative z-10">View Projects</span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-black to-gray-800 dark:from-gray-900 dark:to-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                 </motion.button>
                 
                 <motion.button
@@ -460,7 +464,12 @@ export default function Home() {
                   className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg bg-white border border-gray-800 text-black dark:text-black font-medium hover:bg-gray-50 transition-all flex items-center hover:shadow-lg"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  style={{ cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
+                  style={{ 
+                    cursor: 'pointer', 
+                    WebkitTapHighlightColor: 'transparent',
+                    WebkitAppearance: 'none',
+                    display: 'inline-block'
+                  }}
                 >
                   Get in Touch
                   <svg 
