@@ -1,6 +1,6 @@
 # Nexus & Nexcrow: Personal Blockchain Exploration
 
-![Nexus Platform](/images/nexus-platform.jpg)
+![Nexus Platform](/Space Monk/Twitter header - 5.png)
 
 ## Project Inspiration
 
