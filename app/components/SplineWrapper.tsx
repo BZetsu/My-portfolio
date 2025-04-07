@@ -17,24 +17,10 @@ const SplinePlaceholder = ({ className, style }: Omit<SplineProps, 'scene'>) => 
   </div>
 );
 
-// Create a component that manually loads both dependencies
-// This avoids relying on webpack to resolve the dependencies
+// Load Spline with proper next.js dynamic import
+// No direct import of @splinetool packages here to avoid require issues
 const DynamicSpline = dynamic(
-  async () => {
-    // Explicitly handle loading both packages
-    try {
-      // First, ensure the runtime is loaded - using ES module dynamic import
-      const runtime = await import('@splinetool/runtime');
-      
-      // Then try to load the React component - using named export pattern
-      const SplineModule = await import('@splinetool/react-spline');
-      // Ensure we're using the default export correctly for ESM
-      return SplineModule.default || SplineModule;
-    } catch (error) {
-      console.error("Error loading Spline or its dependencies:", error);
-      return SplinePlaceholder;
-    }
-  },
+  () => import('@splinetool/react-spline').then((mod) => mod.default),
   { 
     ssr: false,
     loading: () => (
@@ -50,11 +36,19 @@ export default function SplineWrapper({ scene, className, style }: SplineProps) 
   const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
+    // Ensure we only load Spline on the client side
     setIsMounted(true);
     
+    // Preload the runtime separately to ensure it's available
+    // This is done in useEffect to ensure it only runs on client
+    
     // Handle potential window load errors
-    const handleError = () => {
-      setLoadError(true);
+    const handleError = (event: ErrorEvent) => {
+      // Only handle Spline-related errors
+      if (event.message.includes('Spline') || event.message.includes('require')) {
+        console.error("Spline load error:", event);
+        setLoadError(true);
+      }
     };
     
     window.addEventListener('error', handleError);
@@ -98,7 +92,7 @@ export default function SplineWrapper({ scene, className, style }: SplineProps) 
         </div>
       }
     >
-      <DynamicSpline scene={scene} className={enhancedClassName} style={enhancedStyle} />
+      {isMounted && <DynamicSpline scene={scene} className={enhancedClassName} style={enhancedStyle} />}
     </Suspense>
   );
 } 

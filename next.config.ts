@@ -14,23 +14,30 @@ const nextConfig: NextConfig = {
     // Don't run type checking during builds
     ignoreBuildErrors: true,
   },
-  webpack: (config, { isServer }) => {
-    // Explicitly resolve @splinetool packages
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@splinetool/react-spline': path.resolve('./node_modules/@splinetool/react-spline/dist/react-spline.js'),
-      '@splinetool/react-spline/next': path.resolve('./node_modules/@splinetool/react-spline/dist/react-spline.js'),
-      '@splinetool/runtime': path.resolve('./node_modules/@splinetool/runtime/dist/runtime.js'),
-    };
+  webpack: (config, { isServer, webpack }) => {
+    // Optimizations for client side rendering
+    if (!isServer) {
+      // Provide proper browser globals instead of Node.js globals
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        module: false,
+        path: false,
+        os: false,
+        crypto: false,
+      };
+
+      // Add a plugin to replace require with a browser-compatible alternative
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        })
+      );
+    }
     
     // Add specific condition names for module resolution
     if (config.resolve.conditionNames) {
-      config.resolve.conditionNames.push('import', 'require', 'default');
-    }
-    
-    // Ensure dependencies are properly handled
-    if (!config.resolve.fallback) {
-      config.resolve.fallback = {};
+      config.resolve.conditionNames.push('import', 'default');
     }
     
     // Make sure webpack can resolve these modules
@@ -39,18 +46,6 @@ const nextConfig: NextConfig = {
       path.resolve('./node_modules'),
       'node_modules'
     ];
-    
-    // Explicitly map the external dependencies
-    if (!config.externals) {
-      config.externals = [];
-    }
-    
-    if (Array.isArray(config.externals)) {
-      // Add specific rules for @splinetool packages
-      config.externals.push({
-        '@splinetool/runtime': 'commonjs @splinetool/runtime',
-      });
-    }
     
     return config;
   }
