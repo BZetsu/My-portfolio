@@ -1,7 +1,7 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
+import React, { Suspense, useEffect, useState, lazy } from 'react';
+// Removed: import dynamic from 'next/dynamic';
 
 // Define prop types that match what Spline component will expect
 type SplineProps = {
@@ -10,17 +10,19 @@ type SplineProps = {
   style?: React.CSSProperties;
 };
 
-// Define a placeholder component for when Spline can't be loaded
-const SplinePlaceholder = ({ className, style }: Omit<SplineProps, 'scene'>) => (
+// Define a placeholder component for loading/error states
+const SplinePlaceholder = ({ message, className, style }: { message: string } & Omit<SplineProps, 'scene'>) => (
   <div className={`w-full h-full flex items-center justify-center ${className || ''}`} style={style}>
-    <div className="text-black/50 dark:text-white/50">3D scene unavailable</div>
+    <div className="text-black/50 dark:text-white/50">{message}</div>
   </div>
 );
 
-// Load Spline with proper next.js dynamic import
-// No direct import of @splinetool packages here to avoid require issues
+// Lazily load the Spline component using React.lazy with the base import path
+const LazySpline = lazy(() => import('@splinetool/react-spline'));
+
+/* Removed the old next/dynamic definition
 const DynamicSpline = dynamic(
-  () => import('@splinetool/react-spline/next'),
+  () => import('@splinetool/react-spline/next'), 
   { 
     ssr: false,
     loading: () => (
@@ -30,31 +32,18 @@ const DynamicSpline = dynamic(
     )
   }
 );
+*/
 
 export default function SplineWrapper({ scene, className, style }: SplineProps) {
   const [isMounted, setIsMounted] = useState(false);
-  const [loadError, setLoadError] = useState(false);
+  // Removed loadError state as Suspense handles errors
 
   useEffect(() => {
-    // Ensure we only load Spline on the client side
+    // Component did mount, safe to render client-side only component
     setIsMounted(true);
     
-    // Preload the runtime separately to ensure it's available
-    // This is done in useEffect to ensure it only runs on client
-    
-    // Handle potential window load errors
-    const handleError = (event: ErrorEvent) => {
-      // Only handle Spline-related errors
-      if (event.message.includes('Spline') || event.message.includes('require')) {
-        console.error("Spline load error:", event);
-        setLoadError(true);
-      }
-    };
-    
-    window.addEventListener('error', handleError);
-    return () => {
-      window.removeEventListener('error', handleError);
-    };
+    // Error handling can be done via ErrorBoundary around Suspense if needed
+    // Removed window error listener as it might not be reliable for lazy component errors
   }, []);
 
   // Ensure cursor events work by applying these styles to the wrapper
@@ -68,31 +57,18 @@ export default function SplineWrapper({ scene, className, style }: SplineProps) 
   // Ensure cursor events work by enhancing the className
   const enhancedClassName = `${className || ''} pointer-events-auto`;
 
-  if (loadError) {
-    return (
-      <div className={`w-full h-full flex items-center justify-center ${className || ''}`} style={style}>
-        <div className="text-black/50 dark:text-white/50">Failed to load 3D scene</div>
-      </div>
-    );
-  }
-
+  // Render placeholder if not mounted yet
   if (!isMounted) {
-    return (
-      <div className={`w-full h-full flex items-center justify-center ${className || ''}`} style={style}>
-        <div className="animate-pulse text-black/50 dark:text-white/50">Loading 3D scene...</div>
-      </div>
-    );
+    return <SplinePlaceholder message="Loading 3D scene..." className={className} style={style} />;
   }
 
+  // Render the lazily loaded component within Suspense
   return (
     <Suspense 
-      fallback={
-        <div className={`w-full h-full flex items-center justify-center ${className || ''}`} style={style}>
-          <div className="animate-pulse text-black/50 dark:text-white/50">Loading 3D scene...</div>
-        </div>
-      }
+      fallback={<SplinePlaceholder message="Loading 3D scene..." className={className} style={style} />}
     >
-      {isMounted && <DynamicSpline scene={scene} className={enhancedClassName} style={enhancedStyle} />}
+      {/* Render only when mounted to ensure client-side execution */}
+      {isMounted && <LazySpline scene={scene} className={enhancedClassName} style={enhancedStyle} />}
     </Suspense>
   );
 } 
