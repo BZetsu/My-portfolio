@@ -20,7 +20,7 @@ const SplinePlaceholder = ({ className, style }: Omit<SplineProps, 'scene'>) => 
 // Load Spline with proper next.js dynamic import
 // No direct import of @splinetool packages here to avoid require issues
 const DynamicSpline = dynamic(
-  () => import('@splinetool/react-spline/next').then((mod) => mod.default),
+  () => import('@splinetool/react-spline/next'),
   { 
     ssr: false,
     loading: () => (
