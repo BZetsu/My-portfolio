@@ -3,7 +3,7 @@ import path from 'path';
 
 const nextConfig: NextConfig = {
   /* config options here */
-  transpilePackages: ['@splinetool/react-spline', '@splinetool/runtime'],
+  transpilePackages: ['@splinetool/runtime'],
   // Disable ESLint errors during build
   eslint: {
     // Don't run ESLint during builds
