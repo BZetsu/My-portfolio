@@ -146,7 +146,7 @@ const CursorTrail = () => {
   const cursorColor = theme === 'dark' ? 'bg-black/70' : 'bg-black/70';
   
   return (
-    <div className="pointer-events-none fixed inset-0 z-50" ref={dotsContainerRef}>
+    <div className="pointer-events-none fixed inset-0 z-[100]" ref={dotsContainerRef}>
       {/* Trail dots - pre-rendered and cached */}
       {Array(trailLength).fill(null).map((_, index) => (
         <div
@@ -154,7 +154,7 @@ const CursorTrail = () => {
           ref={el => {
             if (el) trailElementsRef.current[index] = el;
           }}
-          className={`absolute w-3 h-3 rounded-full ${dotColor} will-change-transform will-change-opacity hardware-accelerated`}
+          className={`absolute w-3 h-3 rounded-full ${dotColor} will-change-transform will-change-opacity hardware-accelerated pointer-events-none`}
           style={{
             position: 'absolute',
             width: '12px',
@@ -162,6 +162,7 @@ const CursorTrail = () => {
             transform: 'translate3d(0, 0, 0) scale(0)',
             opacity: 0,
             transition: 'opacity 0.05s ease-out',
+            pointerEvents: 'none'
           }}
         />
       ))}
@@ -169,14 +170,15 @@ const CursorTrail = () => {
       {/* Main cursor dot */}
       <div
         ref={mainCursorRef}
-        className={`w-5 h-5 rounded-full ${cursorColor} will-change-transform hardware-accelerated`}
+        className={`w-5 h-5 rounded-full ${cursorColor} will-change-transform hardware-accelerated pointer-events-none`}
         style={{
           width: '20px',
           height: '20px',
           borderRadius: '50%',
           animation: 'pulse 1.5s infinite alternate ease-in-out',
           backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.6)'
+          boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.6)',
+          pointerEvents: 'none'
         }}
       />
       

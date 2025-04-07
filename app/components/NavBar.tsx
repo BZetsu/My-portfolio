@@ -4,12 +4,14 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import ThemeToggle from './ThemeToggle';
+import useIsMobile from '../hooks/useIsMobile';
 
 const NavBar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const isMobile = useIsMobile();
 
   // Handle scroll event
   useEffect(() => {
@@ -24,32 +26,32 @@ const NavBar: React.FC = () => {
   // Determine styles based on scroll and theme
   const headerStyle = isScrolled
     ? `fixed w-full top-0 left-0 z-50 ${isDark 
-        ? 'bg-black/90 backdrop-blur-sm shadow-md shadow-black/10' 
-        : 'bg-white/90 backdrop-blur-sm shadow-md shadow-black/5'}`
+        ? 'bg-black/95 backdrop-blur-md shadow-lg shadow-black/20' 
+        : 'bg-white/95 backdrop-blur-md shadow-lg shadow-black/10'}`
     : `fixed w-full top-0 left-0 z-50 ${isDark 
-        ? 'bg-transparent' 
-        : 'bg-transparent'}`;
+        ? 'bg-black/70 backdrop-blur-sm' 
+        : 'bg-white/70 backdrop-blur-sm'}`;
 
   const textColor = isDark 
-    ? isScrolled ? 'text-white' : 'text-white'
-    : isScrolled ? 'text-gray-800' : 'text-gray-800';
+    ? 'text-white' 
+    : 'text-gray-800';
 
   const hoverColor = isDark
     ? 'hover:text-indigo-400'
     : 'hover:text-indigo-600';
 
   const mobileMenuBg = isDark
-    ? 'bg-black'
-    : 'bg-white';
+    ? 'bg-black/95'
+    : 'bg-white/95';
 
   return (
     <header className={headerStyle}>
-      <div className="container mx-auto px-4 md:px-6 py-4">
+      <div className="container mx-auto px-4 md:px-6 py-3 md:py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <a 
             href="#" 
-            className={`text-xl font-bold ${textColor}`}
+            className={`text-lg md:text-xl font-bold ${textColor}`}
             style={{ fontFamily: "'Space Mono', monospace", letterSpacing: '0.15em' }}
           >
             JAMES
@@ -74,7 +76,7 @@ const NavBar: React.FC = () => {
             <ThemeToggle />
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`ml-4 ${textColor} focus:outline-none`}
+              className={`ml-4 ${textColor} p-2 focus:outline-none`}
               aria-label="Toggle menu"
             >
               <svg
@@ -112,27 +114,27 @@ const NavBar: React.FC = () => {
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.3 }}
-          className={`md:hidden ${mobileMenuBg} border-t ${isDark ? 'border-gray-800' : 'border-gray-100'}`}
+          className={`md:hidden ${mobileMenuBg} border-t ${isDark ? 'border-gray-800' : 'border-gray-200'} shadow-lg`}
         >
           <div className="container mx-auto px-4 py-4">
             <nav className="flex flex-col space-y-4">
               <a 
                 href="#about" 
-                className={`${textColor} ${hoverColor} py-2 transition-colors duration-300`}
+                className={`${textColor} ${hoverColor} py-3 px-2 text-lg font-medium transition-colors duration-300`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 About
               </a>
               <a 
                 href="#projects" 
-                className={`${textColor} ${hoverColor} py-2 transition-colors duration-300`}
+                className={`${textColor} ${hoverColor} py-3 px-2 text-lg font-medium transition-colors duration-300`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Projects
               </a>
               <a 
                 href="#contact" 
-                className={`${textColor} ${hoverColor} py-2 transition-colors duration-300`}
+                className={`${textColor} ${hoverColor} py-3 px-2 text-lg font-medium transition-colors duration-300`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact

@@ -24,6 +24,7 @@ export const metadata: Metadata = {
   title: "Portfolio3D | Creative Developer & 3D Designer",
   description: "Interactive 3D portfolio showcasing creative development and 3D design projects.",
   keywords: "3D portfolio, creative developer, WebGL, Three.js, interactive design, Spline",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
 };
 
 export default function RootLayout({

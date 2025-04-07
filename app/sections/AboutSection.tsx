@@ -111,7 +111,7 @@ export default function AboutSection() {
             <div className="flex flex-col md:flex-row gap-8 items-center md:items-start mb-6">
               <div className="w-72 h-48 relative rounded-xl overflow-hidden shadow-xl">
                 <Image 
-                  src="/images/enhanced_WhatsApp_human_crisp_clear.jpg" 
+                  src="/images/profile-photo.jpg" 
                   alt="James" 
                   fill
                   className="object-cover"
@@ -129,7 +129,7 @@ export default function AboutSection() {
               </div>
               <div>
                 <h3 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  Full-Stack Developer & Entrepreneur
+                  Just an obsessed builder
                 </h3>
                 <p className={`mb-6 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                   Certified and skilled across both technical and non-technical domains, I blend product design, 
