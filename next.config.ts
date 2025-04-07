@@ -35,11 +35,6 @@ const nextConfig: NextConfig = {
       );
     }
     
-    // Add specific condition names for module resolution
-    if (config.resolve.conditionNames) {
-      config.resolve.conditionNames.push('import', 'default');
-    }
-    
     // Make sure webpack can resolve these modules
     config.resolve.modules = [
       ...config.resolve.modules || [],
