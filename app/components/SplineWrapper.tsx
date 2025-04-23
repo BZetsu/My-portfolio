@@ -22,7 +22,7 @@ const LazySpline = lazy(() => import('@splinetool/react-spline'));
 
 /* Removed the old next/dynamic definition
 const DynamicSpline = dynamic(
-  () => import('@splinetool/react-spline/next'), 
+  () => import('@splinetool/react-spline/next'),
   { 
     ssr: false,
     loading: () => (
