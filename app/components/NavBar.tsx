@@ -47,19 +47,19 @@ const NavBar: React.FC = () => {
   return (
     <>
       {/* Construction Banner */}
-      <div className="fixed w-full top-0 left-0 z-[51] bg-yellow-400 p-2" 
+      <div className="fixed w-full top-0 left-0 z-[51] p-1 md:p-2" 
            style={{
              background: 'repeating-linear-gradient(45deg, #f7b500, #f7b500 10px, #000000 10px, #000000 20px)'
            }}>
-        <div className="container mx-auto px-4 flex justify-center items-center">
-          <div className="flex items-center bg-black/80 px-4 py-1 rounded-full">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-yellow-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="container mx-auto px-2 md:px-4 flex justify-center items-center">
+          <div className="flex items-center bg-black/80 px-2 md:px-4 py-0.5 md:py-1 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 md:h-5 md:w-5 mr-1 md:mr-2 text-yellow-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
-            <p className="text-sm md:text-base font-bold text-yellow-400 tracking-wide uppercase">
+            <p className="text-xs md:text-sm font-bold text-yellow-400 tracking-wide uppercase">
               This site is still under construction, But you can walk with me
             </p>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2 text-yellow-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 md:h-5 md:w-5 ml-1 md:ml-2 text-yellow-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
@@ -67,7 +67,7 @@ const NavBar: React.FC = () => {
       </div>
       
       {/* Main Navigation - Adjusted top position to accommodate banner */}
-      <header className={`${headerStyle} mt-10`}>
+      <header className={`${headerStyle} mt-7 md:mt-10`}>
         <div className="container mx-auto px-4 md:px-6 py-3 md:py-4">
           <div className="flex justify-between items-center">
             {/* Logo */}
